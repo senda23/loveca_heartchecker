@@ -1,6 +1,6 @@
 let liveCards = {}; // JSONデータを格納
 
-// JSON を読み込んでプルダウンに反映
+// **JSONを読み込み、プルダウンを初期化**
 async function loadLiveCards() {
     try {
         const response = await fetch("cards.json");
@@ -13,7 +13,7 @@ async function loadLiveCards() {
     }
 }
 
-// ライブカード選択用のプルダウンを初期化
+// **プルダウンをセットアップ**
 function initializeDropdowns() {
     const cardSelectors = ["card1", "card2", "card3"];
     cardSelectors.forEach(id => {
@@ -34,8 +34,8 @@ function initializeDropdowns() {
     });
 }
 
-// **ボタンを押すと、プルダウンで選んだカードのハート数をフォームに反映**
-function applySelectedCards() {
+// **ボタンを押すと、ライブカードのハート数をフォームに反映**
+document.getElementById("applyCards").addEventListener("click", () => {
     let totalHearts = { 桃: 0, 赤: 0, 黄: 0, 緑: 0, 青: 0, 紫: 0, 灰: 0 };
 
     ["card1", "card2", "card3"].forEach(id => {
@@ -48,61 +48,37 @@ function applySelectedCards() {
         }
     });
 
-    // 入力欄を更新（手入力可能）
+    // 必要ハートを更新（ただし手入力も可能）
     Object.keys(totalHearts).forEach(color => {
         document.getElementById(`need_${getColorKey(color)}`).value = totalHearts[color];
     });
-}
+});
 
-// **ハートの不足数を計算する関数**
+// **ハート不足数を計算**
 function calculateRequiredHearts() {
-    // 必要なハート数（ユーザーが手入力した値）
-    let requiredHearts = {
-        pink: parseInt(document.getElementById("need_pink").value, 10) || 0,
-        red: parseInt(document.getElementById("need_red").value, 10) || 0,
-        yellow: parseInt(document.getElementById("need_yellow").value, 10) || 0,
-        green: parseInt(document.getElementById("need_green").value, 10) || 0,
-        blue: parseInt(document.getElementById("need_blue").value, 10) || 0,
-        purple: parseInt(document.getElementById("need_purple").value, 10) || 0,
-        gray: parseInt(document.getElementById("need_gray").value, 10) || 0
-    };
+    let requiredHearts = getHearts("need");
+    let availableHearts = getHearts("have");
 
-    // 持っているハート数（ALL はどの色でも使える）
-    let availableHearts = {
-        pink: parseInt(document.getElementById("have_pink").value, 10) || 0,
-        red: parseInt(document.getElementById("have_red").value, 10) || 0,
-        yellow: parseInt(document.getElementById("have_yellow").value, 10) || 0,
-        green: parseInt(document.getElementById("have_green").value, 10) || 0,
-        blue: parseInt(document.getElementById("have_blue").value, 10) || 0,
-        purple: parseInt(document.getElementById("have_purple").value, 10) || 0,
-        all: parseInt(document.getElementById("have_all").value, 10) || 0
-    };
-
-    // **1. 灰色以外のハートを自分の場のハートで埋める**
     let missingHearts = { pink: 0, red: 0, yellow: 0, green: 0, blue: 0, purple: 0 };
-    
+
     for (let color of ["pink", "red", "yellow", "green", "blue", "purple"]) {
         if (availableHearts[color] >= requiredHearts[color]) {
-            availableHearts[color] -= requiredHearts[color]; // 必要分を消費
+            availableHearts[color] -= requiredHearts[color];
         } else {
-            missingHearts[color] = requiredHearts[color] - availableHearts[color]; // 足りない数を記録
-            availableHearts[color] = 0; // すべて消費
+            missingHearts[color] = requiredHearts[color] - availableHearts[color];
+            availableHearts[color] = 0;
         }
     }
 
-    // **2. 不足している色を ALL で埋める**
     for (let color of ["pink", "red", "yellow", "green", "blue", "purple"]) {
         if (availableHearts.all <= 0) break;
-        let needed = missingHearts[color];
-        let usedAll = Math.min(availableHearts.all, needed);
+        let usedAll = Math.min(availableHearts.all, missingHearts[color]);
         missingHearts[color] -= usedAll;
         availableHearts.all -= usedAll;
     }
 
-    // **3. 灰のハートを埋める**
     let remainingGray = requiredHearts.gray;
 
-    // まだ使用していないハートで灰色を埋める
     for (let color of ["pink", "red", "yellow", "green", "blue", "purple"]) {
         if (remainingGray <= 0) break;
         let usedGray = Math.min(availableHearts[color], remainingGray);
@@ -110,12 +86,10 @@ function calculateRequiredHearts() {
         availableHearts[color] -= usedGray;
     }
 
-    // **4. 残った ALL で灰色を埋める**
     let finalAllUsed = Math.min(availableHearts.all, remainingGray);
     remainingGray -= finalAllUsed;
     availableHearts.all -= finalAllUsed;
 
-    // **5. ここまでで足りないハートがある場合、不足分を表示**
     let resultText = "現在のハートでライブ成功可能です！";
     let totalMissing = Object.values(missingHearts).reduce((sum, val) => sum + val, 0) + remainingGray;
 
@@ -134,12 +108,20 @@ function calculateRequiredHearts() {
     document.getElementById("result").innerHTML = resultText;
 }
 
-// 絵文字を取得する関数
-function getColorEmoji(color) {
-    return { pink: "🩷", red: "❤️", yellow: "💛", green: "💚", blue: "💙", purple: "💜" }[color];
+// **ハート情報を取得**
+function getHearts(prefix) {
+    return {
+        pink: parseInt(document.getElementById(`${prefix}_pink`).value, 10) || 0,
+        red: parseInt(document.getElementById(`${prefix}_red`).value, 10) || 0,
+        yellow: parseInt(document.getElementById(`${prefix}_yellow`).value, 10) || 0,
+        green: parseInt(document.getElementById(`${prefix}_green`).value, 10) || 0,
+        blue: parseInt(document.getElementById(`${prefix}_blue`).value, 10) || 0,
+        purple: parseInt(document.getElementById(`${prefix}_purple`).value, 10) || 0,
+        gray: parseInt(document.getElementById(`${prefix}_gray`).value, 10) || 0,
+        all: parseInt(document.getElementById("have_all").value, 10) || 0
+    };
 }
 
-// 初期化
 document.addEventListener("DOMContentLoaded", () => {
     loadLiveCards();
 });
