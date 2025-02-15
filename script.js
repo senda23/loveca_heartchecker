@@ -34,37 +34,29 @@ function initializeDropdowns() {
     });
 }
 
-// ライブカードの選択に応じて必要なハート数を更新（手入力可能）
-function updateHeartRequirements() {
-    let selectedHearts = { 桃: 0, 赤: 0, 黄: 0, 緑: 0, 青: 0, 紫: 0, 灰: 0 };
+// **ボタンを押すと、プルダウンで選んだカードのハート数をフォームに反映**
+function applySelectedCards() {
+    let totalHearts = { 桃: 0, 赤: 0, 黄: 0, 緑: 0, 青: 0, 紫: 0, 灰: 0 };
 
     ["card1", "card2", "card3"].forEach(id => {
         let selectedCard = document.getElementById(id).value;
-        if (selectedCard !== "none") {
-            let cardData = liveCards[selectedCard] || {};
-            Object.keys(selectedHearts).forEach(color => {
-                selectedHearts[color] += cardData[color] || 0;
+        if (selectedCard !== "none" && liveCards[selectedCard]) {
+            let cardData = liveCards[selectedCard];
+            Object.keys(totalHearts).forEach(color => {
+                totalHearts[color] += cardData[color] || 0;
             });
         }
     });
 
-    // 必要ハート入力欄を自動入力（ただし手動編集可能）
-    Object.keys(selectedHearts).forEach(color => {
-        let inputField = document.getElementById(`need_${getColorKey(color)}`);
-        if (document.activeElement !== inputField) {
-            inputField.value = selectedHearts[color];
-        }
+    // 入力欄を更新（手入力可能）
+    Object.keys(totalHearts).forEach(color => {
+        document.getElementById(`need_${getColorKey(color)}`).value = totalHearts[color];
     });
-}
-
-// 色名をキーに変換
-function getColorKey(color) {
-    return { 桃: "pink", 赤: "red", 黄: "yellow", 緑: "green", 青: "blue", 紫: "purple", 灰: "gray" }[color];
 }
 
 // **ハートの不足数を計算する関数**
 function calculateRequiredHearts() {
-    // 必要なハート数
+    // 必要なハート数（ユーザーが手入力した値）
     let requiredHearts = {
         pink: parseInt(document.getElementById("need_pink").value, 10) || 0,
         red: parseInt(document.getElementById("need_red").value, 10) || 0,
