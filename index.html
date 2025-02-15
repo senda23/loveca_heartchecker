@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ライブ成功計算ツール</title>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <h1>ライブ成功計算ツール</h1>
+
+    <h2>ライブの必要ハート数</h2>
+    <label for="need_pink">🩷桃:</label>
+    <input type="number" id="need_pink" value="0"><br>
+
+    <label for="need_red">❤️赤:</label>
+    <input type="number" id="need_red" value="0"><br>
+
+    <label for="need_yellow">💛黄:</label>
+    <input type="number" id="need_yellow" value="0"><br>
+
+    <label for="need_green">💚緑:</label>
+    <input type="number" id="need_green" value="0"><br>
+
+    <label for="need_blue">💙青:</label>
+    <input type="number" id="need_blue" value="0"><br>
+
+    <label for="need_purple">💜紫:</label>
+    <input type="number" id="need_purple" value="0"><br>
+
+    <label for="need_gray">🩶灰:</label>
+    <input type="number" id="need_gray" value="0"><br>
+
+    <h2>現在のハート数</h2>
+    <label for="have_pink">🩷桃:</label>
+    <input type="number" id="have_pink" value="0"><br>
+
+    <label for="have_red">❤️赤:</label>
+    <input type="number" id="have_red" value="0"><br>
+
+    <label for="have_yellow">💛黄:</label>
+    <input type="number" id="have_yellow" value="0"><br>
+
+    <label for="have_green">💚緑:</label>
+    <input type="number" id="have_green" value="0"><br>
+
+    <label for="have_blue">💙青:</label>
+    <input type="number" id="have_blue" value="0"><br>
+
+    <label for="have_purple">💜紫:</label>
+    <input type="number" id="have_purple" value="0"><br>
+
+    <label for="have_all">🌈虹:</label>
+    <input type="number" id="have_all" value="0"><br>
+
+    <button onclick="calculateRequiredHearts()">計算</button>
+
+    <h2 id="result">結果がここに表示されます</h2>
+</body>
+</html>
