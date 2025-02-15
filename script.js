@@ -35,7 +35,7 @@ function initializeDropdowns() {
 }
 
 // **ボタンを押すと、ライブカードのハート数をフォームに反映**
-document.getElementById("applyCards").addEventListener("click", () => {
+function applySelectedCards() {
     let totalHearts = { 桃: 0, 赤: 0, 黄: 0, 緑: 0, 青: 0, 紫: 0, 灰: 0 };
 
     ["card1", "card2", "card3"].forEach(id => {
@@ -50,9 +50,10 @@ document.getElementById("applyCards").addEventListener("click", () => {
 
     // 必要ハートを更新（ただし手入力も可能）
     Object.keys(totalHearts).forEach(color => {
-        document.getElementById(`need_${getColorKey(color)}`).value = totalHearts[color];
+        let inputField = document.getElementById(`need_${getColorKey(color)}`);
+        inputField.value = totalHearts[color];
     });
-});
+}
 
 // **ハート不足数を計算**
 function calculateRequiredHearts() {
@@ -122,6 +123,20 @@ function getHearts(prefix) {
     };
 }
 
+// **イベントリスナーをHTMLがロードされた後に設定**
 document.addEventListener("DOMContentLoaded", () => {
     loadLiveCards();
+
+    document.getElementById("applyCards").addEventListener("click", applySelectedCards);
+    document.getElementById("calculateHearts").addEventListener("click", calculateRequiredHearts);
 });
+
+// **色名をHTMLのIDに変換**
+function getColorKey(color) {
+    return { 桃: "pink", 赤: "red", 黄: "yellow", 緑: "green", 青: "blue", 紫: "purple", 灰: "gray" }[color];
+}
+
+// **絵文字を取得**
+function getColorEmoji(color) {
+    return { pink: "🩷", red: "❤️", yellow: "💛", green: "💚", blue: "💙", purple: "💜" }[color];
+}
