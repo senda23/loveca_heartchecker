@@ -20,6 +20,11 @@ function initializeDropdowns() {
         let select = document.getElementById(id);
         select.innerHTML = ""; // 初期化
 
+        let defaultOption = document.createElement("option");
+        defaultOption.value = "手入力";
+        defaultOption.textContent = "手入力";
+        select.appendChild(defaultOption);
+
         Object.keys(liveCards).forEach(card => {
             let option = document.createElement("option");
             option.value = card;
@@ -32,18 +37,26 @@ function initializeDropdowns() {
 // ライブカードの選択に応じて必要なハート数を更新
 function updateHeartRequirements() {
     let totalHearts = { 桃: 0, 赤: 0, 黄: 0, 緑: 0, 青: 0, 紫: 0, 灰: 0 };
+    let isManualInput = false; // 手入力モード判定
 
     ["card1", "card2", "card3"].forEach(id => {
         let selectedCard = document.getElementById(id).value;
-        let cardData = liveCards[selectedCard] || {};
-        Object.keys(totalHearts).forEach(color => {
-            totalHearts[color] += cardData[color] || 0;
-        });
+        if (selectedCard === "手入力") {
+            isManualInput = true;
+        } else {
+            let cardData = liveCards[selectedCard] || {};
+            Object.keys(totalHearts).forEach(color => {
+                totalHearts[color] += cardData[color] || 0;
+            });
+        }
     });
 
-    Object.keys(totalHearts).forEach(color => {
-        document.getElementById(`need_${getColorKey(color)}`).value = totalHearts[color];
-    });
+    // 手入力モードなら現在の値を保持
+    if (!isManualInput) {
+        Object.keys(totalHearts).forEach(color => {
+            document.getElementById(`need_${getColorKey(color)}`).value = totalHearts[color];
+        });
+    }
 }
 
 // 色名をキーに変換
@@ -124,7 +137,7 @@ function calculateRequiredHearts() {
             }
         }
         if (remainingGray > 0) {
-            resultText += `⚫ ${remainingGray}個（任意の色）<br>`;
+            resultText += `🩶 ${remainingGray}個（任意の色）<br>`;
         }
     }
 
