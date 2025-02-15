@@ -21,8 +21,8 @@ function initializeDropdowns() {
         select.innerHTML = ""; // 初期化
 
         let defaultOption = document.createElement("option");
-        defaultOption.value = "手入力";
-        defaultOption.textContent = "手入力";
+        defaultOption.value = "none";
+        defaultOption.textContent = "選択なし";
         select.appendChild(defaultOption);
 
         Object.keys(liveCards).forEach(card => {
@@ -34,29 +34,27 @@ function initializeDropdowns() {
     });
 }
 
-// ライブカードの選択に応じて必要なハート数を更新
+// ライブカードの選択に応じて必要なハート数を更新（手入力可能）
 function updateHeartRequirements() {
-    let totalHearts = { 桃: 0, 赤: 0, 黄: 0, 緑: 0, 青: 0, 紫: 0, 灰: 0 };
-    let isManualInput = false; // 手入力モード判定
+    let selectedHearts = { 桃: 0, 赤: 0, 黄: 0, 緑: 0, 青: 0, 紫: 0, 灰: 0 };
 
     ["card1", "card2", "card3"].forEach(id => {
         let selectedCard = document.getElementById(id).value;
-        if (selectedCard === "手入力") {
-            isManualInput = true;
-        } else {
+        if (selectedCard !== "none") {
             let cardData = liveCards[selectedCard] || {};
-            Object.keys(totalHearts).forEach(color => {
-                totalHearts[color] += cardData[color] || 0;
+            Object.keys(selectedHearts).forEach(color => {
+                selectedHearts[color] += cardData[color] || 0;
             });
         }
     });
 
-    // 手入力モードなら現在の値を保持
-    if (!isManualInput) {
-        Object.keys(totalHearts).forEach(color => {
-            document.getElementById(`need_${getColorKey(color)}`).value = totalHearts[color];
-        });
-    }
+    // 必要ハート入力欄を自動入力（ただし手動編集可能）
+    Object.keys(selectedHearts).forEach(color => {
+        let inputField = document.getElementById(`need_${getColorKey(color)}`);
+        if (document.activeElement !== inputField) {
+            inputField.value = selectedHearts[color];
+        }
+    });
 }
 
 // 色名をキーに変換
@@ -137,7 +135,7 @@ function calculateRequiredHearts() {
             }
         }
         if (remainingGray > 0) {
-            resultText += `🩶 ${remainingGray}個（任意の色）<br>`;
+            resultText += `⚫ ${remainingGray}個（任意の色）<br>`;
         }
     }
 
