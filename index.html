@@ -9,52 +9,37 @@
 <body>
     <h1>ライブ成功計算ツール</h1>
 
-    <h2>ライブの必要ハート数</h2>
-    <label for="need_pink">🩷桃:</label>
-    <input type="number" id="need_pink" value="0"><br>
+    <h2>🎵 ライブカード選択 🎵</h2>
+    <label>ライブカード1:</label>
+    <select id="card1" onchange="updateHeartRequirements()"></select><br>
+    <label>ライブカード2:</label>
+    <select id="card2" onchange="updateHeartRequirements()"></select><br>
+    <label>ライブカード3:</label>
+    <select id="card3" onchange="updateHeartRequirements()"></select><br>
 
-    <label for="need_red">❤️赤:</label>
-    <input type="number" id="need_red" value="0"><br>
+    <h2>🎨 必要なハート数</h2>
+    <div id="required_hearts">
+        <label>🩷桃:</label> <input type="number" id="need_pink" value="0" readonly><br>
+        <label>❤️赤:</label> <input type="number" id="need_red" value="0" readonly><br>
+        <label>💛黄:</label> <input type="number" id="need_yellow" value="0" readonly><br>
+        <label>💚緑:</label> <input type="number" id="need_green" value="0" readonly><br>
+        <label>💙青:</label> <input type="number" id="need_blue" value="0" readonly><br>
+        <label>💜紫:</label> <input type="number" id="need_purple" value="0" readonly><br>
+        <label>⚫灰:</label> <input type="number" id="need_gray" value="0" readonly><br>
+    </div>
 
-    <label for="need_yellow">💛黄:</label>
-    <input type="number" id="need_yellow" value="0"><br>
-
-    <label for="need_green">💚緑:</label>
-    <input type="number" id="need_green" value="0"><br>
-
-    <label for="need_blue">💙青:</label>
-    <input type="number" id="need_blue" value="0"><br>
-
-    <label for="need_purple">💜紫:</label>
-    <input type="number" id="need_purple" value="0"><br>
-
-    <label for="need_gray">🩶灰:</label>
-    <input type="number" id="need_gray" value="0"><br>
-
-    <h2>現在のハート数</h2>
-    <label for="have_pink">🩷桃:</label>
-    <input type="number" id="have_pink" value="0"><br>
-
-    <label for="have_red">❤️赤:</label>
-    <input type="number" id="have_red" value="0"><br>
-
-    <label for="have_yellow">💛黄:</label>
-    <input type="number" id="have_yellow" value="0"><br>
-
-    <label for="have_green">💚緑:</label>
-    <input type="number" id="have_green" value="0"><br>
-
-    <label for="have_blue">💙青:</label>
-    <input type="number" id="have_blue" value="0"><br>
-
-    <label for="have_purple">💜紫:</label>
-    <input type="number" id="have_purple" value="0"><br>
-
-    <label for="have_all">🌈虹:</label>
-    <input type="number" id="have_all" value="0"><br>
+    <h2>💖 持っているハート数</h2>
+    <div id="available_hearts">
+        <label>🩷桃:</label> <input type="number" id="have_pink" value="0"><br>
+        <label>❤️赤:</label> <input type="number" id="have_red" value="0"><br>
+        <label>💛黄:</label> <input type="number" id="have_yellow" value="0"><br>
+        <label>💚緑:</label> <input type="number" id="have_green" value="0"><br>
+        <label>💙青:</label> <input type="number" id="have_blue" value="0"><br>
+        <label>💜紫:</label> <input type="number" id="have_purple" value="0"><br>
+        <label>🌈ALL:</label> <input type="number" id="have_all" value="0"><br>
+    </div>
 
     <button onclick="calculateRequiredHearts()">計算</button>
-
     <h2 id="result">結果がここに表示されます</h2>
 </body>
 </html>
