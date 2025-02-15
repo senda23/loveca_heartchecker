@@ -117,7 +117,7 @@ function calculateRequiredHearts() {
     let resultText = "現在のハートでライブ成功可能です！";
     let totalMissing = Object.values(missingHearts).reduce((sum, val) => sum + val, 0) + remainingGray;
     if (totalMissing > 0) {
-        resultText = "ライブ成功には以下のハートが必要です:<br>";
+        resultText = "ライブ成功には以下のハートが必要です<br>";
         for (let color in missingHearts) {
             if (missingHearts[color] > 0) {
                 resultText += `${heartEmojis[color]} ${color}: ${missingHearts[color]}個<br>`;
